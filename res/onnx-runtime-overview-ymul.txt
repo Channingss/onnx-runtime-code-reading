@@ -1,0 +1,57 @@
+// This document is contain the text used to generate the corresponding .svg file at [yuml.me](https://yuml.me/)
+
+// Cool Class Diagram
+// ------------------
+
+// Chain elements like this
+
+[InferenceSession]++-*>[<<IExecutor>>]
+[InferenceSession]++->[SessionState]
+[InferenceSession]++->[Model]
+[InferenceSession]++-1>[ExecutionProviders]
+[InferenceSession]++-1>[KernelRegistryManager]
+[InferenceSession]->[GraphPartitioner]
+[InferenceSession]->[SessionStateInitializer]
+[SessionStateInitializer]<>->[SessionState]
+[SessionStateInitializer]<>->[KernelRegistryManager]
+[GraphPartitioner]->[Graph]
+[GraphPartitioner]<>->[KernelRegistryManager]
+[GraphPartitioner]<>->[ExecutionProviders]
+[Graph]->[Model]
+[SessionState]++->[GraphViewer]
+[SessionState]<>-*>[OpKernel]
+[SessionState]->[KernelRegistryManager]
+[GraphViewer]<>->[Graph]
+[<<IExecutor>>]^-.-[SequencialExecutor]
+[<<IExecutor>>]^-.-[ParallelExecutor]
+[SequencialExecutor]->[SessionState]
+[ParallelExecutor]->[SessionState]
+[ExecutionProviders]<>->[IExecutionProvider]
+[IExecutionProvider]^-.-[CPUExecutionProvider]
+[IExecutionProvider]^-.-[CUDAExecutionProvider]
+[CPUExecutionProvider]->[KernelRegistry]
+[KernelRegistryManager]<>->[KernelRegistry]
+[KernelRegistryManager]->[IExecutionProvider]
+[KernelRegistry]++->[KernelCreateInfo]
+[SequencialExecutor]->[+ExecuteGraph]
+[+ExecuteGraph]->[+ExecuteGraphImpl]
+[+ExecuteGraphImpl]->[SessionState]
+[OpKernel]^-[Conv]
+[OpKernel]^-[BatchNorm]
+[OpKernel]^-[CudaKernel]
+// Add notes
+[SessionState]-[note: Central Unit{bg:wheat}]
+[InferenceSession]-[note: Arbiter{bg:wheat}]
+
+// Add more detail
+[InferenceSession|+RegisterExecutionProvider();+Load();+Initialize();+TransformGraph();+Run()]
+[<<IExecutor>>|+Execute()]
+[KernelCreateInfo|+KernelDef;+KernelCreateFn]
+[KernelRegistryManager|+RegisterKernelRegistry();+RegisterKernels();+CreateKernel()]
+[Graph|+AddNode();+GetNode()]
+[KernelRegistry|+Register();+TryCreateKernel()]
+[IExecutionProvider|+GetKernelRegistry()]
+[OpKernel|+Compute()]
+[SessionState|+GetGraphViewer();+GetKernel();+GetExecutionProviders();+CreateKernels();+SetExecutionPlan();+GetExecutionPlan()]
+[GraphPartitioner|+Partition()]
+[SessionStateInitializer|+CreatePlan()]
